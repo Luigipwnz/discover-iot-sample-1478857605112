@@ -56,7 +56,13 @@ app.get('/credentials', function(req, res) {
 });
 
 app.get('/position', function(req, res) {
-	var appClientConfig = config;
+	var appClientConfig = {
+        	"org" : credentials.org,
+        	"id" : credentials.iotCredentialsIdentifier,
+        	"auth-key" : credentials.apiKey,
+       		"auth-token" : credentials.apiToken
+    	}
+
 	var appClient = new Client.IotfApplication(appClientConfig);
 
 	appClient.connect();
