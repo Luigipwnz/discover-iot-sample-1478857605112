@@ -69,6 +69,8 @@ app.get('/position', function(req, res) {
 	appClient.connect();
 
     	appClient.on("connect", function () {
+		
+		console.log("Subscribing to device.");
 
         	appClient.subscribeToDeviceEvents("iot-phone","+","+","json");
 
