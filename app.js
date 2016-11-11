@@ -92,8 +92,10 @@ app.get('/position', function(req, res) {
 
 		if (ob < 1.5 && ob > -1.5) {
 			console.log("SMARTPHONE LAYING");
+			res.send("SMARTPHONE LAYING");
 		} else {
 			console.log("SMARTPHONE IN HAND");
+			res.send("SMARTPHONE IN HAND");
 		}
 
    	});
