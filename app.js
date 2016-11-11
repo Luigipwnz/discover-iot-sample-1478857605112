@@ -79,14 +79,16 @@ app.get('/position', function(req, res) {
 
         	console.log("Device Event from :: "+deviceType+" : "+deviceId+" of event "+eventType+" with payload : "+payload);
 
-		var id = payload.d.id;
-		var ts = payload.d.ts;
-		var ax = payload.d.ax;
-		var ay = payload.d.ay;
-		var az = payload.d.az;
-		var oa = payload.d.oa;
-		var ob = payload.d.ob;
-		var og = payload.d.og;
+		var parsedPayload = JSON.parse(payload);
+
+		var id = parsedPayload.d.id;
+		var ts = parsedPayload.d.ts;
+		var ax = parsedPayload.d.ax;
+		var ay = parsedPayload.d.ay;
+		var az = parsedPayload.d.az;
+		var oa = parsedPayload.d.oa;
+		var ob = parsedPayload.d.ob;
+		var og = parsedPayload.d.og;
 
 		if (ob < 1.5 || ob > -1.5) {
 			console.log("SMARTPHONE LAYING");
