@@ -90,7 +90,7 @@ app.get('/position', function(req, res) {
 		var ob = parsedPayload.d.ob;
 		var og = parsedPayload.d.og;
 
-		if (ob < 1.5 || ob > -1.5) {
+		if (ob < 1.5 && ob > -1.5) {
 			console.log("SMARTPHONE LAYING");
 		} else {
 			console.log("SMARTPHONE IN HAND");
