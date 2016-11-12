@@ -10,7 +10,7 @@ Goal of the modification:
 Use movement and/or acceleration data to detect if smartphone 
 is lying flat on the table or not and send back message containing the information.
 
-Be aware that there commit messages are very bad.
+Be aware that there commit messages are very bad. 
 
 (https://discover-iot.mybluemix.net)
 
