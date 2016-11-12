@@ -15,15 +15,15 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 var config = null;
 var credentials = null;
 var cred = {
-                "iotCredentialsIdentifier": "a2g6k39sl6r5",
-                "mqtt_host": "xu8f7r.messaging.internetofthings.ibmcloud.com",
-                "mqtt_u_port": 1883,
-                "mqtt_s_port": 8883,
-                "http_host": "xu8f7r.internetofthings.ibmcloud.com",
-                "org": "xu8f7r",
-                "apiKey": "a-xu8f7r-mlw4ablrem",
-                "apiToken": "&Mfg42b6s+y_tF0ce("
-            };
+	"iotCredentialsIdentifier": "a2g6k39sl6r5",
+	"mqtt_host": "xu8f7r.messaging.internetofthings.ibmcloud.com",
+	"mqtt_u_port": 1883,
+	"mqtt_s_port": 8883,
+	"http_host": "xu8f7r.internetofthings.ibmcloud.com",
+	"org": "xu8f7r",
+	"apiKey": "a-xu8f7r-mlw4ablrem",
+	"apiToken": "&Mfg42b6s+y_tF0ce("
+};
 if (process.env.VCAP_SERVICES) {
 	config = JSON.parse(process.env.VCAP_SERVICES);
 
@@ -52,21 +52,24 @@ var options = {
 	auth: basicConfig.apiKey + ':' + basicConfig.apiToken
 };
 
-app.get('/credentials', function(req, res) {
-	res.json(basicConfig);
-});
+var appClientConfig = {
+	"org" : credentials.org,
+	"id" : credentials.iotCredentialsIdentifier,
+	"auth-key" : credentials.apiKey,
+	"auth-token" : credentials.apiToken
+}
+
+var appClient = null;
 
 app.get('/position', function(req, res) {
-	var appClientConfig = {
-        	"org" : credentials.org,
-        	"id" : credentials.iotCredentialsIdentifier,
-        	"auth-key" : credentials.apiKey,
-       		"auth-token" : credentials.apiToken
-    	}
 
-	var appClient = new Client.IotfApplication(appClientConfig);
+	if (!appClient) {
+		appClient = new Client.IotfApplication(appClientConfig);
+	}
 
-	appClient.connect();
+	if (!appClient.isConnected) {
+		appClient.connect();
+	}
 
     	appClient.on("connect", function () {
 		
@@ -81,24 +84,37 @@ app.get('/position', function(req, res) {
 
 		var parsedPayload = JSON.parse(payload);
 
-		var id = parsedPayload.d.id;
-		var ts = parsedPayload.d.ts;
-		var ax = parsedPayload.d.ax;
-		var ay = parsedPayload.d.ay;
-		var az = parsedPayload.d.az;
-		var oa = parsedPayload.d.oa;
+		//var id = parsedPayload.d.id;
+		//var ts = parsedPayload.d.ts;
+		//var ax = parsedPayload.d.ax;
+		//var ay = parsedPayload.d.ay;
+		//var az = parsedPayload.d.az;
+		//var oa = parsedPayload.d.oa;
 		var ob = parsedPayload.d.ob;
-		var og = parsedPayload.d.og;
+		//var og = parsedPayload.d.og;
 
-		if (ob < 1.5 && ob > -1.5) {
-			console.log("SMARTPHONE LAYING");
-			res.send("SMARTPHONE LAYING");
-		} else {
-			console.log("SMARTPHONE IN HAND");
-			res.send("SMARTPHONE IN HAND");
+		if (!res.finished) {
+			res.setHeader("Content-Type", "text/html");		
+			//tested with iPhone6S
+			if (ob < 1.5 && ob > -1.5) {
+				// console.log("SMARTPHONE LYING")
+				res.write("<p>SMARTPHONE LYING</p>");
+			} else {
+				// console.log("SMARTPHONE IN HAND");
+				res.write("<p>SMARTPHONE IN HAND</p>");
+			}
+			res.end();
 		}
 
+		//appClient.unsubscribeToDeviceEvents("iot-phone","+","+","json");
+		//appClient.disconnect();
+		//appClient = null;
+
    	});
+});
+
+app.get('/credentials', function(req, res) {
+	res.json(basicConfig);
 });
 
 app.get('/iotServiceLink', function(req, res) {
