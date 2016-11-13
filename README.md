@@ -1,4 +1,4 @@
-# discover-iot-sample
+# discover-iot-sample (modified)
 
 Just adding this to see the change. Testing if github on mac works.
 
